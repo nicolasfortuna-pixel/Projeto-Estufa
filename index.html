@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css">
+    <title>Estufa</title>
+  </head>
+  <body>
+    <h1>Monitor da Estufa</h1>
+    <div id="status">conectando...</div>
+    <div class="grade">
+      <div class="card">
+        <div class="nome">Temperatura</div>
+        <div class="valor" id="temp">--</div>
+      </div>
+      <div class="card">
+        <div class="nome">Umidade do ar</div>
+        <div class="valor" id="umid">--</div>
+      </div>
+      <div class="card">
+        <div class="nome">Umidade do solo</div>
+        <div class="valor" id="solo">--</div>
+      </div>
+      <div class="card">
+        <div class="nome">Luminosidade</div>
+        <div class="valor" id="luz">--</div>
+      </div>
+    </div>
+
+    <h2>Últimas leituras</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th>Temp</th>
+          <th>Ar</th>
+          <th>Solo</th>
+          <th>Luz</th>
+        </tr>
+      </thead>
+      <tbody id="hist"></tbody>
+    </table>
+  </body>
+</html>
