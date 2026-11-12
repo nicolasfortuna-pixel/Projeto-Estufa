@@ -1,62 +1,556 @@
+:root {
+  --moldura: #141518;
+  --tela: #090c10;
+  --linha: #232932;
+  --texto: #f3f6fa;
+  --suave: #8f9bab;
+  --erro: #ff4d4d;
+
+  --temp: #ff3366;
+  --umid: #00baff;
+  --luz: #ffd000;
+  --solo: #1aff8c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: sans-serif;
-  background: #0f0f0f;
-  color: #ffffff;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  background: var(--moldura);
+  color: var(--texto);
   margin: 0;
-  padding: 16px;
+  padding: 24px 16px;
+  min-height: 100vh;
+}
+
+.ico {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+/* ---------- Tela (versão PC) ---------- */
+.tela {
+  max-width: 980px;
+  margin: 0 auto;
+  background: radial-gradient(120% 80% at 50% 0%, #0f1520 0%, var(--tela) 60%);
+  border: 2px solid #2a2d33;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 0 0 10px #0e0f11, 0 24px 60px rgba(0, 0, 0, .65);
+}
+
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--linha);
+}
+
+.titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  border-radius: 10px;
+  color: var(--solo);
+  background: color-mix(in srgb, var(--solo) 14%, var(--tela));
+  border: 1px solid color-mix(in srgb, var(--solo) 45%, transparent);
 }
 
 h1 {
   font-size: 20px;
-  margin: 0 0 4px;
+  font-weight: 650;
+  letter-spacing: .2px;
+  margin: 0;
 }
 
-h2 {
+.conexao {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #11161d;
+  border: 1px solid var(--linha);
+}
+
+.conexao .wifi {
+  color: var(--solo);
   font-size: 16px;
-  margin: 24px 0 8px;
+}
+
+[data-conn="off"] .conexao .wifi {
+  color: var(--erro);
 }
 
 #status {
-  font-size: 12px;
-  color: #ff0000;
-  margin-bottom: 16px;
+  font-size: 12.5px;
+  color: var(--suave);
+  margin: 10px 0 18px;
 }
 
+[data-conn="off"] #status {
+  color: var(--erro);
+}
+
+[data-conn="off"] .grade {
+  filter: saturate(.55) brightness(.85);
+}
+
+/* ---------- Cartões ---------- */
 .grade {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  transition: filter .4s;
 }
 
 .card {
-  background: #374a37;
-  border-radius: 12px;
+  --base: var(--suave);
+  --cor: var(--base);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 16px;
-  text-align: center;
+  border-radius: 18px;
+  border: 1.5px solid color-mix(in srgb, var(--cor) 85%, transparent);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--cor) 14%, var(--tela)) 0%, var(--tela) 72%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .05),
+    0 10px 26px -10px color-mix(in srgb, var(--cor) 55%, transparent);
+}
+
+.c-temp {
+  --base: var(--temp);
+}
+
+.c-umid {
+  --base: var(--umid);
+}
+
+.c-luz {
+  --base: var(--luz);
+}
+
+.c-solo {
+  --base: var(--solo);
+}
+
+/* fora da faixa: borda, selo e marcador ficam vermelhos */
+.card.ruim {
+  --cor: var(--erro);
 }
 
 .nome {
-  font-size: 13px;
-  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--suave);
+  padding-right: 26px;
+}
+
+.nome .curto {
+  display: none;
+}
+
+.corpo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .valor {
-  font-size: 32px;
-  font-weight: bold;
-  margin-top: 6px;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.5px;
+  white-space: nowrap;
 }
 
-.ok { color: #4caf50; }
-.ruim { color: #f44336; }
+.valor small {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--suave);
+  margin-left: 3px;
+  letter-spacing: 0;
+}
+
+/* ---------- Ilustrações SVG de status ---------- */
+.arte {
+  width: 58px;
+  height: 58px;
+  flex: none;
+  overflow: visible;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--base) 65%, transparent));
+}
+
+.arte .contorno {
+  fill: none;
+  stroke: var(--base);
+  stroke-width: 2.4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.arte .fundo {
+  fill: var(--base);
+  fill-opacity: .22;
+}
+
+.arte .enche {
+  fill: var(--base);
+  filter: drop-shadow(0 0 3px var(--base));
+}
+
+.arte .agua {
+  fill: var(--base);
+  fill-opacity: .95;
+}
+
+.arte .marcas {
+  fill: none;
+  stroke: var(--suave);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.arte .brilho {
+  fill: none;
+  stroke: #fff;
+  stroke-opacity: .5;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.arte .raios {
+  fill: none;
+  stroke: var(--base);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2px var(--base));
+}
+
+.arte .terra-seca {
+  fill: #c89a5e;
+}
+
+.arte .terra-umida {
+  fill: #5a3418;
+}
+
+.arte .caule {
+  fill: none;
+  stroke: var(--solo);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.arte .folha {
+  fill: var(--solo);
+  filter: drop-shadow(0 0 2px var(--solo));
+}
+
+/* ---------- Barra com faixa ideal ---------- */
+.barra {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: #1a2029;
+  margin-top: 2px;
+}
+
+.zona {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--base) 55%, transparent);
+}
+
+.marca {
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--tela);
+  transform: translateX(-50%);
+  transition: left .5s ease;
+}
+
+.card.ruim .marca {
+  background: var(--erro);
+}
+
+.rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+}
+
+.estado {
+  font-weight: 700;
+  color: var(--cor);
+}
+
+.faixa {
+  color: var(--suave);
+}
+
+/* selo de status (✓ / !) */
+.selo {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--cor);
+  color: var(--tela);
+  display: grid;
+  place-items: center;
+}
+
+.selo svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.selo .s-alerta {
+  display: none;
+}
+
+.card.ruim .selo .s-ok {
+  display: none;
+}
+
+.card.ruim .selo .s-alerta {
+  display: block;
+}
+
+/* ---------- Histórico ---------- */
+h2 {
+  font-size: 15px;
+  font-weight: 650;
+  margin: 28px 0 10px;
+}
 
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 13.5px;
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+td,
+th {
+  padding: 9px 8px;
+  text-align: center;
+}
+
+th {
+  color: var(--suave);
+  font-weight: 600;
+  font-size: 12px;
+  background: #0f141b;
+  border-bottom: 1px solid var(--linha);
+}
+
+tbody tr:nth-child(even) {
+  background: #0c1117;
+}
+
+td.ruim {
+  color: var(--erro);
+  font-weight: 700;
+}
+
+/* PC estreito / celular */
+@media (max-width: 860px) {
+  .grade {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tela {
+    padding: 16px;
+  }
+}
+
+/* ============================================================
+   MINI TELA 320x240 (deitada - ativada por ?mini na URL ou largura <= 340px)
+   ============================================================ */
+body.mini {
+  width: 320px;
+  height: 240px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--tela);
+}
+
+.mini .tela {
+  width: 320px;
+  height: 240px;
+  max-width: none;
+  margin: 0;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.mini .topo {
+  padding-bottom: 6px;
+}
+
+.mini .logo {
+  width: 22px;
+  height: 22px;
+  font-size: 13px;
+  border-radius: 7px;
+}
+
+.mini .titulo {
+  gap: 7px;
+}
+
+.mini h1 {
   font-size: 13px;
 }
 
-td, th {
+.mini .conexao {
+  font-size: 11px;
+  gap: 5px;
+  padding: 3px 8px;
+}
+
+.mini .conexao .wifi {
+  font-size: 12px;
+}
+
+.mini #status {
+  font-size: 10px;
+  margin: 4px 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini .grade {
+  flex: 1;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1fr;
+  gap: 6px;
+  min-height: 0;
+}
+
+.mini .card {
   padding: 6px;
-  border-bottom: 1px solid #333;
+  gap: 4px;
+  border-radius: 10px;
+  border-width: 1.5px;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 0;
+  min-width: 0;
+}
+
+.mini .nome {
+  font-size: 9px;
+  padding-right: 13px;
   text-align: center;
+}
+
+.mini .nome .longo {
+  display: none;
+}
+
+.mini .nome .curto {
+  display: inline;
+}
+
+.mini .corpo {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mini .arte {
+  width: 30px;
+  height: 30px;
+}
+
+.mini .valor {
+  font-size: 16px;
+  letter-spacing: -.3px;
+}
+
+.mini .valor small {
+  font-size: 9px;
+  margin-left: 1px;
+}
+
+.mini .barra {
+  height: 4px;
+  margin-top: 0;
+  width: 100%;
+}
+
+.mini .marca {
+  top: -2.5px;
+  width: 3px;
+  height: 9px;
+}
+
+.mini .rodape {
+  font-size: 9px;
+}
+
+.mini .faixa {
+  display: none;
+}
+
+.mini .selo {
+  top: 4px;
+  right: 4px;
+  width: 13px;
+  height: 13px;
+}
+
+.mini .selo svg {
+  width: 9px;
+  height: 9px;
+}
+
+.mini .historico {
+  display: none;
 }
