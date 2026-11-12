@@ -1,0 +1,62 @@
+body {
+  font-family: sans-serif;
+  background: #0f0f0f;
+  color: #ffffff;
+  margin: 0;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 24px 0 8px;
+}
+
+#status {
+  font-size: 12px;
+  color: #ff0000;
+  margin-bottom: 16px;
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.card {
+  background: #374a37;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.nome {
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.valor {
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.ok { color: #4caf50; }
+.ruim { color: #f44336; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+td, th {
+  padding: 6px;
+  border-bottom: 1px solid #333;
+  text-align: center;
+}

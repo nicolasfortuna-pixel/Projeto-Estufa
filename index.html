@@ -1,46 +1,176 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="style.css">
-    <script type="module" src="app.js"></script>
-    <title>Estufa</title>
-  </head>
-  <body>
-    <h1>Monitor da Estufa</h1>
-    <div id="status">conectando...</div>
-    <div class="grade">
-      <div class="card">
-        <div class="nome">Temperatura</div>
-        <div class="valor" id="temp">--</div>
-      </div>
-      <div class="card">
-        <div class="nome">Umidade do ar</div>
-        <div class="valor" id="umid">--</div>
-      </div>
-      <div class="card">
-        <div class="nome">Umidade do solo</div>
-        <div class="valor" id="solo">--</div>
-      </div>
-      <div class="card">
-        <div class="nome">Luminosidade</div>
-        <div class="valor" id="luz">--</div>
-      </div>
-    </div>
 
-    <h2>Últimas leituras</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Hora</th>
-          <th>Temp</th>
-          <th>Ar</th>
-          <th>Solo</th>
-          <th>Luz</th>
-        </tr>
-      </thead>
-      <tbody id="hist"></tbody>
-    </table>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <title>Estação Ambiental</title>
+</head>
+
+<body data-conn="off">
+  <!-- Símbolos reutilizáveis -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-folha" viewBox="0 0 24 24">
+        <path d="M5 19c0-8 5-14 15-14 0 10-6 15-15 14z" />
+        <path d="M5 19c3-5 6-8 10-10" />
+      </symbol>
+      <symbol id="i-wifi" viewBox="0 0 24 24">
+        <path d="M2 9a15 15 0 0 1 20 0" />
+        <path d="M5 12.5a10 10 0 0 1 14 0" />
+        <path d="M8.5 16a5 5 0 0 1 7 0" />
+        <circle cx="12" cy="19.5" r="1" />
+      </symbol>
+      <symbol id="i-ok" viewBox="0 0 24 24">
+        <path d="M5 12.5l4.5 4.5L19 7" />
+      </symbol>
+      <symbol id="i-alerta" viewBox="0 0 24 24">
+        <path d="M12 6v8" />
+        <circle cx="12" cy="18.5" r=".6" />
+      </symbol>
+      <clipPath id="clip-gota">
+        <path d="M24 4C24 4 8 24 8 40a16 16 0 0 0 32 0C40 24 24 4 24 4z" />
+      </clipPath>
+    </defs>
+  </svg>
+
+  <main class="tela">
+    <header class="topo">
+      <div class="titulo">
+        <span class="logo"><svg class="ico">
+            <use href="#i-folha" />
+          </svg></span>
+        <h1>Estação Ambiental</h1>
+      </div>
+      <div class="conexao">
+        <svg class="ico wifi">
+          <use href="#i-wifi" />
+        </svg>
+        <span id="relogio">--:--</span>
+      </div>
+    </header>
+    <div id="status">conectando...</div>
+
+    <section class="grade">
+
+      <!-- Temperatura: termômetro com nível -->
+      <article class="card c-temp" id="card-temp">
+        <span class="selo"><svg class="s-ok">
+            <use href="#i-ok" />
+          </svg><svg class="s-alerta">
+            <use href="#i-alerta" />
+          </svg></span>
+        <div class="nome"><span class="longo">Temperatura</span><span class="curto">Temperatura</span></div>
+        <div class="corpo">
+          <svg class="arte" viewBox="0 0 48 64" aria-hidden="true">
+            <path class="fundo" d="M18 12a6 6 0 0 1 12 0V42a10 10 0 1 1-12 0z" />
+            <path class="contorno" d="M18 12a6 6 0 0 1 12 0V42a10 10 0 1 1-12 0z" />
+            <circle class="enche" cx="24" cy="50" r="6.5" />
+            <rect class="enche" id="merc" x="21" y="30" width="6" height="18" rx="3" />
+            <path class="marcas" d="M35 14h5M35 21h3M35 28h5M35 35h3" />
+          </svg>
+          <div class="valor" id="temp">--</div>
+        </div>
+        <div class="barra"><span class="zona" id="zona-temp"></span><span class="marca" id="marca-temp"></span></div>
+        <div class="rodape"><span class="estado" id="estado-temp">--</span><span class="faixa" id="faixa-temp"></span>
+        </div>
+      </article>
+
+      <!-- Umidade do ar: gota que enche -->
+      <article class="card c-umid" id="card-umid">
+        <span class="selo"><svg class="s-ok">
+            <use href="#i-ok" />
+          </svg><svg class="s-alerta">
+            <use href="#i-alerta" />
+          </svg></span>
+        <div class="nome"><span class="longo">Umidade do ar</span><span class="curto">Umid. ar</span></div>
+        <div class="corpo">
+          <svg class="arte" viewBox="0 0 48 64" aria-hidden="true">
+            <path class="fundo" d="M24 4C24 4 8 24 8 40a16 16 0 0 0 32 0C40 24 24 4 24 4z" />
+            <g clip-path="url(#clip-gota)">
+              <rect class="agua" id="agua" x="0" y="30" width="48" height="40" />
+            </g>
+            <path class="contorno" d="M24 4C24 4 8 24 8 40a16 16 0 0 0 32 0C40 24 24 4 24 4z" />
+            <path class="brilho" d="M15 40a9 9 0 0 0 6 8" />
+          </svg>
+          <div class="valor" id="umid">--</div>
+        </div>
+        <div class="barra"><span class="zona" id="zona-umid"></span><span class="marca" id="marca-umid"></span></div>
+        <div class="rodape"><span class="estado" id="estado-umid">--</span><span class="faixa" id="faixa-umid"></span>
+        </div>
+      </article>
+
+      <!-- Luminosidade: sol com raios e brilho -->
+      <article class="card c-luz" id="card-luz">
+        <span class="selo"><svg class="s-ok">
+            <use href="#i-ok" />
+          </svg><svg class="s-alerta">
+            <use href="#i-alerta" />
+          </svg></span>
+        <div class="nome"><span class="longo">Luminosidade</span><span class="curto">Luz</span></div>
+        <div class="corpo">
+          <svg class="arte" viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="enche" id="halo" cx="32" cy="32" r="24" fill-opacity=".2" />
+            <g class="raios" id="raios">
+              <path
+                d="M48 32h8M43.3 43.3l5.7 5.7M32 48v8M20.7 43.3L15 49M16 32H8M20.7 20.7L15 15M32 16V8M43.3 20.7L49 15" />
+            </g>
+            <circle class="enche" cx="32" cy="32" r="10" />
+            <path class="brilho" d="M26 28a7 7 0 0 1 4-4" />
+          </svg>
+          <div class="valor" id="luz">--</div>
+        </div>
+        <div class="barra"><span class="zona" id="zona-luz"></span><span class="marca" id="marca-luz"></span></div>
+        <div class="rodape"><span class="estado" id="estado-luz">--</span><span class="faixa" id="faixa-luz"></span>
+        </div>
+      </article>
+
+      <!-- Umidade do solo: planta que cresce e terra que escurece -->
+      <article class="card c-solo" id="card-solo">
+        <span class="selo"><svg class="s-ok">
+            <use href="#i-ok" />
+          </svg><svg class="s-alerta">
+            <use href="#i-alerta" />
+          </svg></span>
+        <div class="nome"><span class="longo">Umidade do solo</span><span class="curto">Umid. solo</span></div>
+        <div class="corpo">
+          <svg class="arte" viewBox="0 0 64 64" aria-hidden="true">
+            <path class="terra-seca" d="M6 60C14 50 50 50 58 60z" />
+            <path class="terra-umida" id="solo-umido" d="M6 60C14 50 50 50 58 60z" fill-opacity="0" />
+            <g id="planta">
+              <path class="caule" d="M32 52V22" />
+              <path class="folha" d="M32 38C22 38 16 32 16 24C26 24 32 30 32 38z" />
+              <path class="folha" d="M32 30C42 30 48 24 48 16C38 16 32 22 32 30z" />
+            </g>
+          </svg>
+          <div class="valor" id="solo">--</div>
+        </div>
+        <div class="barra"><span class="zona" id="zona-solo"></span><span class="marca" id="marca-solo"></span></div>
+        <div class="rodape"><span class="estado" id="estado-solo">--</span><span class="faixa" id="faixa-solo"></span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Só aparece na versão PC -->
+    <section class="historico">
+      <h2>Últimas leituras</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Temp (°C)</th>
+            <th>Ar (%)</th>
+            <th>Solo (%)</th>
+            <th>Luz (%)</th>
+          </tr>
+        </thead>
+        <tbody id="hist"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+
 </html>
