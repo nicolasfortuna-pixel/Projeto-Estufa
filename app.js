@@ -3,12 +3,13 @@ import { getDatabase, ref, onValue, query, limitToLast } from "https://www.gstat
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUKXBwWRhgZOwI3NTibBzHh3duuDRNSyE",
-    authDomain: "projeto-sensor---dados.firebaseapp.com",
-    projectId: "projeto-sensor---dados",
-    storageBucket: "projeto-sensor---dados.firebasestorage.app",
-    messagingSenderId: "643631878953",
-    appId: "1:643631878953:web:caf54bceadd37a4c021d38",
-    measurementId: "G-CDWQ6E8R22"
+  authDomain: "projeto-sensor---dados.firebaseapp.com",
+  databaseURL: "https://projeto-sensor---dados-default-rtdb.firebaseio.com",
+  projectId: "projeto-sensor---dados",
+  storageBucket: "projeto-sensor---dados.firebasestorage.app",
+  messagingSenderId: "643631878953",
+  appId: "1:643631878953:web:caf54bceadd37a4c021d38",
+  measurementId: "G-CDWQ6E8R22"
 };
 const db = getDatabase(initializeApp(firebaseConfig));
 
